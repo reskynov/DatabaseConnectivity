@@ -55,7 +55,7 @@ namespace DatabaseConnectivity
                     Console.WriteLine(", Manager ID : " + managerIdString);
 
                     Console.Write("Job ID : " + reader.GetString(9));
-                    Console.Write("Department ID : " + reader.GetInt32(10));
+                    Console.WriteLine("Department ID : " + reader.GetInt32(10));
 
                 }
                 reader.Close();
@@ -68,13 +68,13 @@ namespace DatabaseConnectivity
         }
 
         //Insert
-        public static void SetDepartments(int departmentId, string name, int locationId, int managerId)
+        public static void SetEmployees(int id, string fName, string lName, string email, string phone, int salary, double commis, int managerId, string jobId, int departmentId)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "insert into departments (id, name, location_id, manager_id) " +
-                "values (@id, @name, @locationId, @managerId);";
+            cmd.CommandText = "insert into employees (id, first_name, last_name, email, phone_number, hire_date, salary, comission_pct, manager_id, job_id, department_id) " +
+                "values (@id, @fname, @lname, @email, @phone, @hire, @salary, @commis, @managerId, @jobId, @departmentId);";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
@@ -83,26 +83,68 @@ namespace DatabaseConnectivity
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
                 pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = departmentId;
+                pId.Value = id;
                 cmd.Parameters.Add(pId);
 
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = System.Data.SqlDbType.VarChar;
-                pName.Value = name;
-                cmd.Parameters.Add(pName);
+                SqlParameter pFName = new SqlParameter();
+                pFName.ParameterName = "@fname";
+                pFName.SqlDbType = System.Data.SqlDbType.VarChar;
+                pFName.Value = fName;
+                cmd.Parameters.Add(pFName);
 
-                SqlParameter pLocId = new SqlParameter();
-                pLocId.ParameterName = "@locationId";
-                pLocId.SqlDbType = System.Data.SqlDbType.Int;
-                pLocId.Value = locationId;
-                cmd.Parameters.Add(pLocId);
+                SqlParameter pLName = new SqlParameter();
+                pLName.ParameterName = "@lname";
+                pLName.SqlDbType = System.Data.SqlDbType.VarChar;
+                pLName.Value = lName;
+                cmd.Parameters.Add(pLName);
+
+                SqlParameter pEmail = new SqlParameter();
+                pEmail.ParameterName = "@email";
+                pEmail.SqlDbType = System.Data.SqlDbType.VarChar;
+                pEmail.Value = email;
+                cmd.Parameters.Add(pEmail);
+
+                SqlParameter pPhone = new SqlParameter();
+                pPhone.ParameterName = "@phone";
+                pPhone.SqlDbType = System.Data.SqlDbType.VarChar;
+                pPhone.Value = phone;
+                cmd.Parameters.Add(pPhone);
+
+                SqlParameter pHire = new SqlParameter();
+                pHire.ParameterName = "@hire";
+                pHire.SqlDbType = System.Data.SqlDbType.DateTime;
+                pHire.Value = DateTime.Now;
+                cmd.Parameters.Add(pHire);
+
+                SqlParameter pSalary = new SqlParameter();
+                pSalary.ParameterName = "@salary";
+                pSalary.SqlDbType = System.Data.SqlDbType.Int;
+                pSalary.Value = salary;
+                cmd.Parameters.Add(pSalary);
+
+                SqlParameter pCommis = new SqlParameter();
+                pCommis.ParameterName = "@commis";
+                pCommis.SqlDbType = System.Data.SqlDbType.Decimal;
+                pCommis.Value = commis;
+                cmd.Parameters.Add(pCommis);
 
                 SqlParameter pManId = new SqlParameter();
                 pManId.ParameterName = "@managerId";
                 pManId.SqlDbType = System.Data.SqlDbType.Int;
                 pManId.Value = managerId;
                 cmd.Parameters.Add(pManId);
+
+                SqlParameter pJobId = new SqlParameter();
+                pJobId.ParameterName = "@jobId";
+                pJobId.SqlDbType = System.Data.SqlDbType.Int;
+                pJobId.Value = jobId;
+                cmd.Parameters.Add(pJobId);
+
+                SqlParameter pDeId = new SqlParameter();
+                pDeId.ParameterName = "@departmentId";
+                pDeId.SqlDbType = System.Data.SqlDbType.Int;
+                pDeId.Value = departmentId;
+                cmd.Parameters.Add(pDeId);
 
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
@@ -125,12 +167,12 @@ namespace DatabaseConnectivity
         }
 
         //Update
-        public static void UpdateDepartments(int departmentId, string name, int locationId, int managerId)
+        public static void UpdateEmployees(int id, string fName, string lName, string email, string phone, int salary, double commis, int managerId, string jobId, int departmentId)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "update departments set name = @name, location_id = @locationId, manager_id = @managerId " +
+            cmd.CommandText = "update employees set first_name = @fname, last_name = @lname, email = @email, phone_number = @phone, salary = @salary, comission_pct = @commis, manager_id = @managerId, job_id = @jobId, department_id = @departmentId " +
                 "where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -140,26 +182,63 @@ namespace DatabaseConnectivity
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
                 pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = departmentId;
+                pId.Value = id;
                 cmd.Parameters.Add(pId);
 
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = System.Data.SqlDbType.VarChar;
-                pName.Value = name;
-                cmd.Parameters.Add(pName);
+                SqlParameter pFName = new SqlParameter();
+                pFName.ParameterName = "@fname";
+                pFName.SqlDbType = System.Data.SqlDbType.VarChar;
+                pFName.Value = fName;
+                cmd.Parameters.Add(pFName);
 
-                SqlParameter pLocId = new SqlParameter();
-                pLocId.ParameterName = "@locationId";
-                pLocId.SqlDbType = System.Data.SqlDbType.Int;
-                pLocId.Value = locationId;
-                cmd.Parameters.Add(pLocId);
+                SqlParameter pLName = new SqlParameter();
+                pLName.ParameterName = "@lname";
+                pLName.SqlDbType = System.Data.SqlDbType.VarChar;
+                pLName.Value = lName;
+                cmd.Parameters.Add(pLName);
+
+                SqlParameter pEmail = new SqlParameter();
+                pEmail.ParameterName = "@email";
+                pEmail.SqlDbType = System.Data.SqlDbType.VarChar;
+                pEmail.Value = email;
+                cmd.Parameters.Add(pEmail);
+
+                SqlParameter pPhone = new SqlParameter();
+                pPhone.ParameterName = "@phone";
+                pPhone.SqlDbType = System.Data.SqlDbType.VarChar;
+                pPhone.Value = phone;
+                cmd.Parameters.Add(pPhone);
+
+                SqlParameter pSalary = new SqlParameter();
+                pSalary.ParameterName = "@salary";
+                pSalary.SqlDbType = System.Data.SqlDbType.Int;
+                pSalary.Value = salary;
+                cmd.Parameters.Add(pSalary);
+
+                SqlParameter pCommis = new SqlParameter();
+                pCommis.ParameterName = "@commis";
+                pCommis.SqlDbType = System.Data.SqlDbType.Decimal;
+                pCommis.Value = commis;
+                cmd.Parameters.Add(pCommis);
 
                 SqlParameter pManId = new SqlParameter();
                 pManId.ParameterName = "@managerId";
                 pManId.SqlDbType = System.Data.SqlDbType.Int;
                 pManId.Value = managerId;
                 cmd.Parameters.Add(pManId);
+
+                SqlParameter pJobId = new SqlParameter();
+                pJobId.ParameterName = "@jobId";
+                pJobId.SqlDbType = System.Data.SqlDbType.Int;
+                pJobId.Value = jobId;
+                cmd.Parameters.Add(pJobId);
+
+                SqlParameter pDeId = new SqlParameter();
+                pDeId.ParameterName = "@departmentId";
+                pDeId.SqlDbType = System.Data.SqlDbType.Int;
+                pDeId.Value = departmentId;
+                cmd.Parameters.Add(pDeId);
+
 
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
@@ -182,12 +261,12 @@ namespace DatabaseConnectivity
         }
 
         //Delete
-        public static void DeleteDepartments(int idDepartments)
+        public static void DeleteEmployees(int idEmployees)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "delete from departments where id = @id;";
+            cmd.CommandText = "delete from employees where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
@@ -196,7 +275,7 @@ namespace DatabaseConnectivity
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
                 pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = idDepartments;
+                pId.Value = idEmployees;
                 cmd.Parameters.Add(pId);
 
                 int result = cmd.ExecuteNonQuery();
@@ -220,7 +299,7 @@ namespace DatabaseConnectivity
         }
 
         //Get By ID
-        public static void GetByIdDepartments(int idJobs)
+        public static void GetByIdEmployees(int idEmployees)
         {
             try
             {
@@ -228,25 +307,37 @@ namespace DatabaseConnectivity
 
                 SqlCommand cmd = _connection.CreateCommand();
                 cmd.Connection = _connection;
-                cmd.CommandText = "select * from departments where id = @id";
+                cmd.CommandText = "select * from employees where id = @id";
 
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
                 pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = idJobs;
+                pId.Value = idEmployees;
                 cmd.Parameters.Add(pId);
 
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.WriteLine("FOUND");
                     Console.Write("ID : " + reader.GetInt32(0));
+                    Console.Write(", First Name : " + reader.GetString(1));
 
-                    Console.Write(", Name : " + reader.GetString(1));
+                    string lastName = reader.IsDBNull(2) ? "EMPTY" : reader.GetString(2);
+                    Console.Write(", Last Name : " + lastName);
 
-                    Console.Write(", Location ID : " + reader.GetInt32(2));
+                    Console.Write(", Email : " + reader.GetString(3));
 
-                    int managerId = reader.IsDBNull(3) ? 0 : reader.GetInt32(3);
+                    string phone = reader.IsDBNull(4) ? "EMPTY" : reader.GetString(4);
+                    Console.Write(", Phone Number : " + phone);
+
+                    Console.Write(", Hire Date : " + reader.GetDateTime(5));
+
+                    int salary = reader.IsDBNull(6) ? 0 : reader.GetInt32(6);
+                    Console.Write(", Salary : " + salary);
+
+                    var commis = reader.IsDBNull(7) ? 0 : reader.GetDecimal(7);
+                    Console.Write(", Commission : " + commis);
+
+                    int managerId = reader.IsDBNull(8) ? 0 : reader.GetInt32(8);
                     string managerIdString = "";
                     if (managerId == 0)
                     {
@@ -257,6 +348,9 @@ namespace DatabaseConnectivity
                         managerIdString = managerId.ToString();
                     }
                     Console.WriteLine(", Manager ID : " + managerIdString);
+
+                    Console.Write("Job ID : " + reader.GetString(9));
+                    Console.WriteLine("Department ID : " + reader.GetInt32(10));
                 }
                 reader.Close();
                 _connection.Close();

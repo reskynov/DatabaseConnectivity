@@ -8,34 +8,8 @@ public class Program
 {
     public static void Main()
     {
-        //Locations.GetLocations();
-
-        //Countries.DeleteCountries("TH");
-        //Countries.UpdateCountries("Thailand", "TH");
-
-        Employees.GetEmployees();
- 
-
-        Console.WriteLine();
-        Console.WriteLine();
-
-        //Locations.GetLocations();
-
-        //Insert
-        //Console.WriteLine("Masukkan Nama Region : ");
-        //string inputRegion = Console.ReadLine();
-        //SetRegions(inputRegion);
-
-        //Update
-        //UpdateRegions("South America", 7);
-
-        //Delete
-        //DeleteRegions(7);
-
-        //GetById
+        
 
     }
-
-    //Get Region
 
 }
