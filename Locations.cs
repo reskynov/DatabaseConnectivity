@@ -47,12 +47,13 @@ namespace DatabaseConnectivity
         }
 
         //Insert Countries
-        public static void SetCountries(string inputId, string inputCountries, int inputRegionId)
+        public static void SetLocations(int inputId, string inputStreet, string inputPostal, string inputCity, string inputState, string inputCountryId)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "insert into countries (id, name, region_id) values (@id, @name, @region_id);";
+            cmd.CommandText = "insert into locations (id, street_address, postal_code, city, state_province, country_id) " +
+                "values (@id, @street, @postal, @city, @state, @countryId);";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
@@ -60,21 +61,39 @@ namespace DatabaseConnectivity
             {
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Char;
+                pId.SqlDbType = System.Data.SqlDbType.Int;
                 pId.Value = inputId;
                 cmd.Parameters.Add(pId);
 
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = System.Data.SqlDbType.VarChar;
-                pName.Value = inputCountries;
-                cmd.Parameters.Add(pName);
+                SqlParameter pStreet = new SqlParameter();
+                pStreet.ParameterName = "@street";
+                pStreet.SqlDbType = System.Data.SqlDbType.VarChar;
+                pStreet.Value = inputStreet;
+                cmd.Parameters.Add(pStreet);
 
-                SqlParameter pRegionId = new SqlParameter();
-                pRegionId.ParameterName = "@region_id";
-                pRegionId.SqlDbType = System.Data.SqlDbType.Int;
-                pRegionId.Value = inputRegionId;
-                cmd.Parameters.Add(pRegionId);
+                SqlParameter pPostal = new SqlParameter();
+                pPostal.ParameterName = "@postal";
+                pPostal.SqlDbType = System.Data.SqlDbType.VarChar;
+                pPostal.Value = inputPostal;
+                cmd.Parameters.Add(pPostal);
+
+                SqlParameter pCity = new SqlParameter();
+                pCity.ParameterName = "@city";
+                pCity.SqlDbType = System.Data.SqlDbType.VarChar;
+                pCity.Value = inputCity;
+                cmd.Parameters.Add(pCity);
+
+                SqlParameter pState = new SqlParameter();
+                pState.ParameterName = "@state";
+                pState.SqlDbType = System.Data.SqlDbType.VarChar;
+                pState.Value = inputState;
+                cmd.Parameters.Add(pState);
+
+                SqlParameter pCountryId = new SqlParameter();
+                pCountryId.ParameterName = "@countryId";
+                pCountryId.SqlDbType = System.Data.SqlDbType.Char;
+                pCountryId.Value = inputCountryId;
+                cmd.Parameters.Add(pCountryId);
 
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
@@ -97,28 +116,47 @@ namespace DatabaseConnectivity
         }
 
         //Update Region
-        public static void UpdateCountries(string inputCountries, string idCountries)
+        public static void UpdateLocations(int inputId, string inputStreet, string inputPostal, string inputCity, string inputState)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "update countries set name = @name where id = @id;";
+            cmd.CommandText = "update locations set street_address = @street, postal_code = @postal, city = @city, state_province = @state " +
+                "where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
             try
             {
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = System.Data.SqlDbType.VarChar;
-                pName.Value = inputCountries;
-                cmd.Parameters.Add(pName);
-
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Char;
-                pId.Value = idCountries;
+                pId.SqlDbType = System.Data.SqlDbType.Int;
+                pId.Value = inputId;
                 cmd.Parameters.Add(pId);
+
+                SqlParameter pStreet = new SqlParameter();
+                pStreet.ParameterName = "@street";
+                pStreet.SqlDbType = System.Data.SqlDbType.VarChar;
+                pStreet.Value = inputStreet;
+                cmd.Parameters.Add(pStreet);
+
+                SqlParameter pPostal = new SqlParameter();
+                pPostal.ParameterName = "@postal";
+                pPostal.SqlDbType = System.Data.SqlDbType.VarChar;
+                pPostal.Value = inputPostal;
+                cmd.Parameters.Add(pPostal);
+
+                SqlParameter pCity = new SqlParameter();
+                pCity.ParameterName = "@city";
+                pCity.SqlDbType = System.Data.SqlDbType.VarChar;
+                pCity.Value = inputCity;
+                cmd.Parameters.Add(pCity);
+
+                SqlParameter pState = new SqlParameter();
+                pState.ParameterName = "@state";
+                pState.SqlDbType = System.Data.SqlDbType.VarChar;
+                pState.Value = inputState;
+                cmd.Parameters.Add(pState);
 
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
@@ -134,19 +172,19 @@ namespace DatabaseConnectivity
             }
             catch
             {
-                //mengembalikan ke status awal sebelum diinsert
+                //mengembalikan ke status awal sebelum diupdate
                 transaction.Rollback();
                 Console.WriteLine("Error connection to database");
             }
         }
 
         //Delete Region
-        public static void DeleteCountries(string idCountries)
+        public static void DeleteLocations(int idLocation)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "delete from countries where id = @id;";
+            cmd.CommandText = "delete from locations where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
@@ -154,8 +192,8 @@ namespace DatabaseConnectivity
             {
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Char;
-                pId.Value = idCountries;
+                pId.SqlDbType = System.Data.SqlDbType.Int;
+                pId.Value = idLocation;
                 cmd.Parameters.Add(pId);
 
                 int result = cmd.ExecuteNonQuery();
@@ -172,14 +210,14 @@ namespace DatabaseConnectivity
             }
             catch
             {
-                //mengembalikan ke status awal sebelum diinsert
+                //mengembalikan ke status awal sebelum didelete
                 transaction.Rollback();
                 Console.WriteLine("Error connection to database");
             }
         }
 
         //Get By ID Region
-        public static void GetByIdCountries(string idCountries)
+        public static void GetByIdLocations(int idLocations)
         {
             try
             {
@@ -187,21 +225,32 @@ namespace DatabaseConnectivity
 
                 SqlCommand cmd = _connection.CreateCommand();
                 cmd.Connection = _connection;
-                cmd.CommandText = "select * from countries where id = @id";
+                cmd.CommandText = "select * from locations where id = @id";
 
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Char;
-                pId.Value = idCountries;
+                pId.SqlDbType = System.Data.SqlDbType.Int;
+                pId.Value = idLocations;
                 cmd.Parameters.Add(pId);
 
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.WriteLine("FOUND");
-                    Console.Write("ID : " + reader.GetString(0));
-                    Console.Write(", Name : " + reader.GetString(1));
-                    Console.WriteLine(", Region ID : " + reader.GetInt32(2));
+                    Console.Write("ID : " + reader.GetInt32(0));
+
+                    string streetAddress = reader.IsDBNull(1) ? "EMPTY" : reader.GetString(1);
+                    Console.Write(", Street Address : " + streetAddress);
+
+                    string postalCode = reader.IsDBNull(2) ? "EMPTY" : reader.GetString(2);
+                    Console.Write(", Postal Code : " + postalCode);
+
+                    Console.Write(", City : " + reader.GetString(3));
+
+                    string stateProvince = reader.IsDBNull(4) ? "EMPTY" : reader.GetString(4);
+                    Console.Write(", State Province : " + stateProvince);
+
+                    string countryId = reader.IsDBNull(5) ? "EMPTY" : reader.GetString(5);
+                    Console.WriteLine(", Country ID : " + countryId);
                 }
                 reader.Close();
                 _connection.Close();

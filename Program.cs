@@ -8,14 +8,15 @@ public class Program
 {
     public static void Main()
     {
-        Locations.GetLocations();
+        //Locations.GetLocations();
 
         //Countries.DeleteCountries("TH");
         //Countries.UpdateCountries("Thailand", "TH");
+        Locations.GetByIdLocations(12);
 
         Console.WriteLine();
         Console.WriteLine();
-        Locations.GetLocations();
+        //Locations.GetLocations();
 
         //Insert
         //Console.WriteLine("Masukkan Nama Region : ");

@@ -124,7 +124,7 @@ namespace DatabaseConnectivity
             }
             catch
             {
-                //mengembalikan ke status awal sebelum diinsert
+                //mengembalikan ke status awal sebelum diupdate
                 transaction.Rollback();
                 Console.WriteLine("Error connection to database");
             }
@@ -162,7 +162,7 @@ namespace DatabaseConnectivity
             }
             catch
             {
-                //mengembalikan ke status awal sebelum diinsert
+                //mengembalikan ke status awal sebelum didelete
                 transaction.Rollback();
                 Console.WriteLine("Error connection to database");
             }
