@@ -13,10 +13,11 @@ public class Program
         //Countries.DeleteCountries("TH");
         //Countries.UpdateCountries("Thailand", "TH");
 
+        Employees.GetEmployees();
+ 
 
-        Histories.GetByIdHistories(1);
-
-
+        Console.WriteLine();
+        Console.WriteLine();
 
         //Locations.GetLocations();
 
@@ -30,7 +31,7 @@ public class Program
 
         //Delete
         //DeleteRegions(7);
-        Console.WriteLine();
+
         //GetById
 
     }

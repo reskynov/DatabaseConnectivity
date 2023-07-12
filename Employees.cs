@@ -6,12 +6,12 @@ using System.Reflection.PortableExecutable;
 
 namespace DatabaseConnectivity
 {
-    public class Departments
+    public class Employees
     {
         private static SqlConnection _connection = DatabaseConnection.Connection();
 
         //Get All
-        public static void GetDepartments()
+        public static void GetEmployees()
         {
             try
             {
@@ -19,17 +19,30 @@ namespace DatabaseConnectivity
 
                 SqlCommand cmd = _connection.CreateCommand();
                 cmd.Connection = _connection;
-                cmd.CommandText = "select * from departments";
+                cmd.CommandText = "select * from employees";
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     Console.Write("ID : " + reader.GetInt32(0));
+                    Console.Write(", First Name : " + reader.GetString(1));
 
-                    Console.Write(", Name : " + reader.GetString(1));
+                    string lastName = reader.IsDBNull(2) ? "EMPTY" : reader.GetString(2);
+                    Console.Write(", Last Name : " + lastName);
 
-                    Console.Write(", Location ID : " + reader.GetInt32(2));
+                    Console.Write(", Email : " + reader.GetString(3));
 
-                    int managerId = reader.IsDBNull(3) ? 0 : reader.GetInt32(3);
+                    string phone = reader.IsDBNull(4) ? "EMPTY" : reader.GetString(4);
+                    Console.Write(", Phone Number : " + phone);
+
+                    Console.Write(", Hire Date : " + reader.GetDateTime(5));
+
+                    int salary = reader.IsDBNull(6) ? 0 : reader.GetInt32(6);
+                    Console.Write(", Salary : " + salary);
+
+                    var commis = reader.IsDBNull(7) ? 0 : reader.GetDecimal(7);
+                    Console.Write(", Commission : " + commis);
+
+                    int managerId = reader.IsDBNull(8) ? 0 : reader.GetInt32(8);
                     string managerIdString = "";
                     if (managerId == 0)
                     {
@@ -40,6 +53,10 @@ namespace DatabaseConnectivity
                         managerIdString = managerId.ToString();
                     }
                     Console.WriteLine(", Manager ID : " + managerIdString);
+
+                    Console.Write("Job ID : " + reader.GetString(9));
+                    Console.Write("Department ID : " + reader.GetInt32(10));
+
                 }
                 reader.Close();
                 _connection.Close();
