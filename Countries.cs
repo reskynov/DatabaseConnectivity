@@ -10,6 +10,7 @@ namespace DatabaseConnectivity
     {
         private static SqlConnection _connection = DatabaseConnection.Connection();
 
+        //Get All Countries
         public static void GetCountries()
         {
             try
@@ -86,12 +87,12 @@ namespace DatabaseConnectivity
         }
 
         //Update Region
-        public static void UpdateCountries(string inputCountries, int idRegion)
+        public static void UpdateCountries(string inputCountries, string idCountries)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "update regions set name = @name where id = @id;";
+            cmd.CommandText = "update countries set name = @name where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
@@ -100,13 +101,13 @@ namespace DatabaseConnectivity
                 SqlParameter pName = new SqlParameter();
                 pName.ParameterName = "@name";
                 pName.SqlDbType = System.Data.SqlDbType.VarChar;
-                pName.Value = inputRegion;
+                pName.Value = inputCountries;
                 cmd.Parameters.Add(pName);
 
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = idRegion;
+                pId.SqlDbType = System.Data.SqlDbType.Char;
+                pId.Value = idCountries;
                 cmd.Parameters.Add(pId);
 
                 int result = cmd.ExecuteNonQuery();
@@ -130,12 +131,12 @@ namespace DatabaseConnectivity
         }
 
         //Delete Region
-        public static void DeleteRegions(int idRegion)
+        public static void DeleteCountries(string idCountries)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "delete from regions where id = @id;";
+            cmd.CommandText = "delete from countries where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
@@ -143,8 +144,8 @@ namespace DatabaseConnectivity
             {
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = idRegion;
+                pId.SqlDbType = System.Data.SqlDbType.Char;
+                pId.Value = idCountries;
                 cmd.Parameters.Add(pId);
 
                 int result = cmd.ExecuteNonQuery();
@@ -168,7 +169,7 @@ namespace DatabaseConnectivity
         }
 
         //Get By ID Region
-        public static void GetByIdRegions(int idRegion)
+        public static void GetByIdCountries(string idCountries)
         {
             try
             {
@@ -176,19 +177,21 @@ namespace DatabaseConnectivity
 
                 SqlCommand cmd = _connection.CreateCommand();
                 cmd.Connection = _connection;
-                cmd.CommandText = "select * from regions where id = @id";
+                cmd.CommandText = "select * from countries where id = @id";
 
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = idRegion;
+                pId.SqlDbType = System.Data.SqlDbType.Char;
+                pId.Value = idCountries;
                 cmd.Parameters.Add(pId);
 
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.Write("ID : " + reader.GetInt32(0) + " FOUND");
-                    Console.WriteLine(" - Region Name : " + reader.GetString(1));
+                    Console.WriteLine("FOUND");
+                    Console.Write("ID : " + reader.GetString(0));
+                    Console.Write(", Name : " + reader.GetString(1));
+                    Console.WriteLine(", Region ID : " + reader.GetInt32(2));
                 }
                 reader.Close();
                 _connection.Close();

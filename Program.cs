@@ -10,8 +10,11 @@ public class Program
     {
         Countries.GetCountries();
 
-        Countries.SetCountries("TH", "Thailand", 1);
+        Countries.DeleteCountries("TH");
+        //Countries.UpdateCountries("Thailand", "TH");
 
+        Console.WriteLine();
+        Console.WriteLine();
         Countries.GetCountries();
 
         //Insert

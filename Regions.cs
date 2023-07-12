@@ -172,7 +172,8 @@ namespace DatabaseConnectivity
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.Write("ID : " + reader.GetInt32(0) + " FOUND");
+                    Console.WriteLine("FOUND");
+                    Console.Write("ID : " + reader.GetInt32(0));
                     Console.WriteLine(" - Region Name : " + reader.GetString(1));
                 }
                 reader.Close();
