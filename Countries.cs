@@ -175,7 +175,7 @@ namespace DatabaseConnectivity
         }
 
         //Get By ID
-        public static void GetByIdCountries(string idCountries)
+        public static void GetByNameCountries(string idCountries)
         {
             try
             {
@@ -183,10 +183,10 @@ namespace DatabaseConnectivity
 
                 SqlCommand cmd = _connection.CreateCommand();
                 cmd.Connection = _connection;
-                cmd.CommandText = "select * from countries where id = @id";
+                cmd.CommandText = "select * from countries where name = @name";
 
                 SqlParameter pId = new SqlParameter();
-                pId.ParameterName = "@id";
+                pId.ParameterName = "@name";
                 pId.SqlDbType = System.Data.SqlDbType.Char;
                 pId.Value = idCountries;
                 cmd.Parameters.Add(pId);

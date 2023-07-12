@@ -56,7 +56,7 @@ namespace DatabaseConnectivity
 
                     Console.Write("Job ID : " + reader.GetString(9));
                     Console.WriteLine("Department ID : " + reader.GetInt32(10));
-
+                    Console.WriteLine();
                 }
                 reader.Close();
                 _connection.Close();
