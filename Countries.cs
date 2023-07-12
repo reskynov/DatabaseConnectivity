@@ -10,7 +10,7 @@ namespace DatabaseConnectivity
     {
         private static SqlConnection _connection = DatabaseConnection.Connection();
 
-        //Get All Countries
+        //Get All
         public static void GetCountries()
         {
             try
@@ -36,7 +36,7 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Insert Countries
+        //Insert
         public static void SetCountries(string inputId, string inputCountries, int inputRegionId)
         {
             _connection.Open();
@@ -86,13 +86,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Update Region
-        public static void UpdateCountries(string inputCountries, string idCountries)
+        //Update
+        public static void UpdateCountries(string idCountries, string inputCountries, int regionId)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "update countries set name = @name where id = @id;";
+            cmd.CommandText = "update countries set name = @name, region_id = @regionId where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
@@ -109,6 +109,12 @@ namespace DatabaseConnectivity
                 pId.SqlDbType = System.Data.SqlDbType.Char;
                 pId.Value = idCountries;
                 cmd.Parameters.Add(pId);
+
+                SqlParameter pRegionId = new SqlParameter();
+                pRegionId.ParameterName = "@regionId";
+                pRegionId.SqlDbType = System.Data.SqlDbType.Int;
+                pRegionId.Value = regionId;
+                cmd.Parameters.Add(pRegionId);
 
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
@@ -130,7 +136,7 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Delete Region
+        //Delete
         public static void DeleteCountries(string idCountries)
         {
             _connection.Open();
@@ -168,7 +174,7 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Get By ID Region
+        //Get By ID
         public static void GetByIdCountries(string idCountries)
         {
             try

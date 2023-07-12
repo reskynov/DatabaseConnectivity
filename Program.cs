@@ -12,10 +12,13 @@ public class Program
 
         //Countries.DeleteCountries("TH");
         //Countries.UpdateCountries("Thailand", "TH");
-        Locations.GetByIdLocations(12);
+        Jobs.GetJobs();
+
+        Jobs.GetByIdJobs("15");
 
         Console.WriteLine();
         Console.WriteLine();
+        Jobs.GetJobs();
         //Locations.GetLocations();
 
         //Insert

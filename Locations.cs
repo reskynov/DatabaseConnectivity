@@ -9,6 +9,7 @@ namespace DatabaseConnectivity
     {
         private static SqlConnection _connection = DatabaseConnection.Connection();
 
+        //Get All
         public static void GetLocations()
         {
             try
@@ -46,7 +47,7 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Insert Countries
+        //Insert
         public static void SetLocations(int inputId, string inputStreet, string inputPostal, string inputCity, string inputState, string inputCountryId)
         {
             _connection.Open();
@@ -115,13 +116,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Update Region
-        public static void UpdateLocations(int inputId, string inputStreet, string inputPostal, string inputCity, string inputState)
+        //Update
+        public static void UpdateLocations(int inputId, string inputStreet, string inputPostal, string inputCity, string inputState, string countryId)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "update locations set street_address = @street, postal_code = @postal, city = @city, state_province = @state " +
+            cmd.CommandText = "update locations set street_address = @street, postal_code = @postal, city = @city, state_province = @state, country_id = @countryId " +
                 "where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
@@ -158,6 +159,12 @@ namespace DatabaseConnectivity
                 pState.Value = inputState;
                 cmd.Parameters.Add(pState);
 
+                SqlParameter pCountryId = new SqlParameter();
+                pCountryId.ParameterName = "@countryId";
+                pCountryId.SqlDbType = System.Data.SqlDbType.Char;
+                pCountryId.Value = countryId;
+                cmd.Parameters.Add(pCountryId);
+
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
                 {
@@ -178,7 +185,7 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Delete Region
+        //Delete
         public static void DeleteLocations(int idLocation)
         {
             _connection.Open();
@@ -216,7 +223,7 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Get By ID Region
+        //Get By ID
         public static void GetByIdLocations(int idLocations)
         {
             try
@@ -236,6 +243,7 @@ namespace DatabaseConnectivity
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
+                    Console.WriteLine("FOUND");
                     Console.Write("ID : " + reader.GetInt32(0));
 
                     string streetAddress = reader.IsDBNull(1) ? "EMPTY" : reader.GetString(1);

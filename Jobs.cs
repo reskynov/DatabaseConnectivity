@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Reflection.PortableExecutable;
 
 namespace DatabaseConnectivity
 {
-    public class Regions
+    public class Jobs
     {
         private static SqlConnection _connection = DatabaseConnection.Connection();
 
         //Get All
-        public static void GetRegions()
+        public static void GetJobs()
         {
             try
             {
@@ -17,12 +18,17 @@ namespace DatabaseConnectivity
 
                 SqlCommand cmd = _connection.CreateCommand();
                 cmd.Connection = _connection;
-                cmd.CommandText = "select * from regions";
+                cmd.CommandText = "select * from jobs order by cast(id as int) ASC";
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.Write("ID : " + reader.GetInt32(0));
-                    Console.WriteLine(", Region Name : " + reader.GetString(1));
+                    Console.Write("ID : " + reader.GetString(0));
+
+                    Console.Write(", Title : " + reader.GetString(1));
+
+                    int minSalary = reader.IsDBNull(2) ? 0 : reader.GetInt32(2);
+                    int maxSalary = reader.IsDBNull(3) ? 0 : reader.GetInt32(3);
+                    Console.WriteLine(", Salary Range : $" + minSalary + " - $"+maxSalary);
                 }
                 reader.Close();
                 _connection.Close();
@@ -33,23 +39,42 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Insert Region
-        public static void SetRegions(string inputRegion)
+        //Insert
+        public static void SetJobs(string inputId, string inputTitle, int minSalary, int maxSalary)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "insert into regions (name) values (@name);";
+            cmd.CommandText = "insert into jobs (id, title, min_salary, max_salary) " +
+                "values (@id, @title, @min, @max);";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
             try
             {
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = System.Data.SqlDbType.VarChar;
-                pName.Value = inputRegion;
-                cmd.Parameters.Add(pName);
+                SqlParameter pId = new SqlParameter();
+                pId.ParameterName = "@id";
+                pId.SqlDbType = System.Data.SqlDbType.Char;
+                pId.Value = inputId;
+                cmd.Parameters.Add(pId);
+
+                SqlParameter pTitle = new SqlParameter();
+                pTitle.ParameterName = "@title";
+                pTitle.SqlDbType = System.Data.SqlDbType.VarChar;
+                pTitle.Value = inputTitle;
+                cmd.Parameters.Add(pTitle);
+
+                SqlParameter pMin = new SqlParameter();
+                pMin.ParameterName = "@min";
+                pMin.SqlDbType = System.Data.SqlDbType.Int;
+                pMin.Value = minSalary;
+                cmd.Parameters.Add(pMin);
+
+                SqlParameter pMax = new SqlParameter();
+                pMax.ParameterName = "@max";
+                pMax.SqlDbType = System.Data.SqlDbType.Int;
+                pMax.Value = maxSalary;
+                cmd.Parameters.Add(pMax);
 
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
@@ -71,29 +96,42 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Update Region
-        public static void UpdateRegions(string inputRegion, int idRegion)
+        //Update
+        public static void UpdateJobs(string inputId, string inputTitle, int minSalary, int maxSalary)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "update regions set name = @name where id = @id;";
+            cmd.CommandText = "update jobs set title = @title, min_salary = @min, max_salary = @max " +
+                "where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
             try
             {
-                SqlParameter pName = new SqlParameter();
-                pName.ParameterName = "@name";
-                pName.SqlDbType = System.Data.SqlDbType.VarChar;
-                pName.Value = inputRegion;
-                cmd.Parameters.Add(pName);
-
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
-                pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = idRegion;
+                pId.SqlDbType = System.Data.SqlDbType.Char;
+                pId.Value = inputId;
                 cmd.Parameters.Add(pId);
+
+                SqlParameter pTitle = new SqlParameter();
+                pTitle.ParameterName = "@title";
+                pTitle.SqlDbType = System.Data.SqlDbType.VarChar;
+                pTitle.Value = inputTitle;
+                cmd.Parameters.Add(pTitle);
+
+                SqlParameter pMin = new SqlParameter();
+                pMin.ParameterName = "@min";
+                pMin.SqlDbType = System.Data.SqlDbType.Int;
+                pMin.Value = minSalary;
+                cmd.Parameters.Add(pMin);
+
+                SqlParameter pMax = new SqlParameter();
+                pMax.ParameterName = "@max";
+                pMax.SqlDbType = System.Data.SqlDbType.Int;
+                pMax.Value = maxSalary;
+                cmd.Parameters.Add(pMax);
 
                 int result = cmd.ExecuteNonQuery();
                 if (result > 0)
@@ -115,13 +153,13 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Delete Region
-        public static void DeleteRegions(int idRegion)
+        //Delete
+        public static void DeleteJobs(string idJobs)
         {
             _connection.Open();
             SqlCommand cmd = _connection.CreateCommand();
             cmd.Connection = _connection;
-            cmd.CommandText = "delete from regions where id = @id;";
+            cmd.CommandText = "delete from jobs where id = @id;";
 
             SqlTransaction transaction = _connection.BeginTransaction();
             cmd.Transaction = transaction;
@@ -130,7 +168,7 @@ namespace DatabaseConnectivity
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
                 pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = idRegion;
+                pId.Value = idJobs;
                 cmd.Parameters.Add(pId);
 
                 int result = cmd.ExecuteNonQuery();
@@ -153,8 +191,8 @@ namespace DatabaseConnectivity
             }
         }
 
-        //Get By ID Region
-        public static void GetByIdRegions(int idRegion)
+        //Get By ID
+        public static void GetByIdJobs(string idJobs)
         {
             try
             {
@@ -162,20 +200,25 @@ namespace DatabaseConnectivity
 
                 SqlCommand cmd = _connection.CreateCommand();
                 cmd.Connection = _connection;
-                cmd.CommandText = "select * from regions where id = @id";
+                cmd.CommandText = "select * from jobs where id = @id";
 
                 SqlParameter pId = new SqlParameter();
                 pId.ParameterName = "@id";
                 pId.SqlDbType = System.Data.SqlDbType.Int;
-                pId.Value = idRegion;
+                pId.Value = idJobs;
                 cmd.Parameters.Add(pId);
 
                 using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     Console.WriteLine("FOUND");
-                    Console.Write("ID : " + reader.GetInt32(0));
-                    Console.WriteLine(" - Region Name : " + reader.GetString(1));
+                    Console.Write("ID : " + reader.GetString(0));
+
+                    Console.Write(", Title : " + reader.GetString(1));
+
+                    int minSalary = reader.IsDBNull(2) ? 0 : reader.GetInt32(2);
+                    int maxSalary = reader.IsDBNull(3) ? 0 : reader.GetInt32(3);
+                    Console.WriteLine(", Salary Range : $" + minSalary + " - $" + maxSalary);
                 }
                 reader.Close();
                 _connection.Close();
